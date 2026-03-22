@@ -4,6 +4,7 @@ import {
     stepRefineBoundary,
     stepConsecutiveDigits,
     stepLowEntropyParagraph,
+    stepNormalParagraphExemption,
     stepTrimWhitespace,
     stepMergeIntervals
 } from './steps/index.js';
@@ -13,13 +14,15 @@ import {
 // 2. 简单细粒度精确定位
 // 3. 连续数字豁免
 // 4. 低熵段落豁免
-// 5. 修剪空白
-// 6. 合并区间
+// 5. 正常段落豁免（新增）
+// 6. 修剪空白
+// 7. 合并区间
 const STEPS = [
     stepSlidingWindowDetection,
     stepRefineBoundary,
     stepConsecutiveDigits,
     stepLowEntropyParagraph,
+    stepNormalParagraphExemption,
     stepTrimWhitespace,
     stepMergeIntervals
 ];
