@@ -1,27 +1,29 @@
 import { runPipeline } from './pipeline.js';
 import {
-    stepParagraphDetection,
+    stepSlidingWindowDetection,
+    stepRefineBoundary,
     stepConsecutiveDigits,
     stepLowEntropyParagraph,
     stepTrimWhitespace,
     stepMergeIntervals
 } from './steps/index.js';
 
-// 定义步骤顺序
+// 步骤顺序：
+// 1. 滑动窗口粗检测
+// 2. 简单细粒度精确定位
+// 3. 连续数字豁免
+// 4. 低熵段落豁免
+// 5. 修剪空白
+// 6. 合并区间
 const STEPS = [
-    stepParagraphDetection,   // 第一步：自然段异常检测
-    stepConsecutiveDigits,    // 连续数字豁免
-    stepLowEntropyParagraph,  // 低熵段落豁免
-    stepTrimWhitespace,       // 修剪空白
-    stepMergeIntervals        // 合并区间
+    stepSlidingWindowDetection,
+    stepRefineBoundary,
+    stepConsecutiveDigits,
+    stepLowEntropyParagraph,
+    stepTrimWhitespace,
+    stepMergeIntervals
 ];
 
-/**
- * 检测文本中的噪声片段
- * @param {string} text - 全文
- * @returns {Array<{start, end}>} 最终片段
- */
 export function detectNoiseFragments(text) {
-    const intervals = runPipeline(STEPS, text);
-    return intervals;
+    return runPipeline(STEPS, text);
 }
