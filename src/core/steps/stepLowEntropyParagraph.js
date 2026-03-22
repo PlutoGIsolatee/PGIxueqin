@@ -42,9 +42,19 @@ export function stepLowEntropyParagraph(intervals, text) {
         if (!paragraphs) return intervals;
     }
     
+    // 打印所有段落的熵值（调试）
+    if (DEBUG) {
+        console.log('[步骤4] 段落熵值列表:');
+        for (let i = 0; i < paragraphs.length; i++) {
+            const entropy = getCachedParagraphEntropy(i);
+            console.log(`  段落 ${i}: ${paragraphs[i].start}-${paragraphs[i].end} 熵=${entropy !== undefined ? entropy.toFixed(4) : '未缓存'}`);
+        }
+    }
+    
     const newIntervals = [];
     for (let idx = 0; idx < intervals.length; idx++) {
         const frag = intervals[idx];
+        console.log(`[步骤4] 处理片段 ${idx}: ${frag.start}-${frag.end}`);
         const removeIntervals = [];
         
         for (let i = 0; i < paragraphs.length; i++) {
@@ -58,18 +68,17 @@ export function stepLowEntropyParagraph(intervals, text) {
             } else {
                 const paraText = text.slice(para.start, para.end);
                 entropy = computePermutationEntropy(paraText);
+                console.log(`  段落 ${i} 熵未缓存，重新计算: ${entropy.toFixed(4)}`);
             }
             
-            if (DEBUG) {
-                console.log(`  段落 ${para.start}-${para.end} (长度=${para.end-para.start}) 熵值: ${entropy.toFixed(4)}`);
-            }
+            console.log(`  段落 ${i} (${para.start}-${para.end}) 熵值: ${entropy.toFixed(4)}`);
             
             if (entropy < ENTROPY_THRESHOLD) {
                 const overlapStart = Math.max(frag.start, para.start);
                 const overlapEnd = Math.min(frag.end, para.end);
                 if (overlapStart < overlapEnd) {
                     removeIntervals.push({ start: overlapStart, end: overlapEnd });
-                    if (DEBUG) console.log(`  [豁免] 移除低熵段落重叠部分 ${overlapStart}-${overlapEnd}, 熵=${entropy}`);
+                    console.log(`  [豁免] 移除低熵段落重叠部分 ${overlapStart}-${overlapEnd}, 熵=${entropy.toFixed(4)}`);
                 }
             }
         }
@@ -78,8 +87,8 @@ export function stepLowEntropyParagraph(intervals, text) {
             newIntervals.push(frag);
         } else {
             const kept = subtractIntervals(frag, removeIntervals);
+            console.log(`  片段 ${frag.start}-${frag.end} 裁剪后保留:`, kept);
             newIntervals.push(...kept);
-            if (DEBUG) console.log(`  片段 ${frag.start}-${frag.end} 裁剪后保留:`, kept);
         }
     }
     

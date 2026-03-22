@@ -66,13 +66,14 @@ export function precomputeParagraphStats(text, lenRatio = 0.2, minSimilar = 2) {
     cachedParagraphLengths = new Array(n);
     cachedEntropies = new Array(n);
     
-    // 1. 计算每个段落的特征、长度和排列熵
+    // 1. 计算每个段落的特征、长度和排列熵（先 trim 去除首尾空白）
     for (let i = 0; i < n; i++) {
         const para = cachedParagraphs[i];
         const paraText = text.slice(para.start, para.end);
+        const trimmedText = paraText.trim(); // 关键修改：去除首尾空白
         cachedParagraphFeatures[i] = getParagraphFeatures(paraText);
         cachedParagraphLengths[i] = para.end - para.start;
-        cachedEntropies[i] = computePermutationEntropy(paraText);
+        cachedEntropies[i] = computePermutationEntropy(trimmedText);
     }
     
     // 2. 预计算每个段落的相近段落统计
