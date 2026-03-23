@@ -1,24 +1,23 @@
-const DEBUG = true;
+import { trimFragment } from '../utils/intervalUtils.js';
+import { config } from '../config.js';
 
 /**
- * 步骤：修剪片段首尾空白字符（包括换行、空格等）
+ * 步骤：修剪片段首尾空白字符
  * @param {Array} intervals - 输入片段列表
  * @param {string} text - 全文
+ * @param {Object} context - 共享上下文（未使用）
  * @returns {Array} 修剪后的片段列表
  */
-export function stepTrimWhitespace(intervals, text) {
+export function stepTrimWhitespace(intervals, text, context) {
     if (!intervals || intervals.length === 0) return intervals;
     
-    if (DEBUG) console.log('[步骤4] 修剪空白');
+    if (config.debug) console.log('[步骤6] 修剪空白');
     
     const newIntervals = [];
     for (const frag of intervals) {
-        let start = frag.start;
-        let end = frag.end;
-        while (start < end && /\s/.test(text[start])) start++;
-        while (end > start && /\s/.test(text[end - 1])) end--;
-        if (start < end) {
-            newIntervals.push({ start, end });
+        const trimmed = trimFragment(text, frag.start, frag.end);
+        if (trimmed.start < trimmed.end) {
+            newIntervals.push(trimmed);
         }
     }
     return newIntervals;

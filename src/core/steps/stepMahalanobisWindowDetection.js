@@ -1,48 +1,53 @@
 import { computeWindowFeatures } from '../stats.js';
-import { mergeWindows } from '../refine.js';
+import { mergeIntervals } from '../utils/intervalUtils.js';
+import { extractFeatures, extractFeatureMatrix } from '../utils/featureUtils.js';
 import { computeGlobalCovariance, setGlobalStats, computeMahalanobis } from './mahalanobisUtils.js';
+import { config } from '../config.js';
 
-const WINDOW_SIZE = 75;   // 用户已修改为75
-const STEP = 10;
-const DEBUG = true;
-
-const FEATURE_NAMES = ['han', 'zhPunc', 'enChar', 'enPunc', 'digit', 'other'];
-
-function extractFeatures(features) {
-    return FEATURE_NAMES.map(k => features[k]);
-}
-
-export function stepMahalanobisWindowDetection(intervals, text) {
+export function stepMahalanobisWindowDetection(intervals, text, context) {
     if (intervals !== null) return intervals;
     
-    if (DEBUG) console.log('[步骤1] 马氏距离滑动窗口检测');
+    if (config.debug) console.log('[步骤1] 马氏距离滑动窗口检测');
     
-    const windows = computeWindowFeatures(text, WINDOW_SIZE, STEP);
+    // 计算所有窗口的特征（一次）
+    const windows = computeWindowFeatures(text, config.windowSize, config.step);
     if (windows.length === 0) return [];
     
-    const featuresMatrix = windows.map(w => extractFeatures(w.features));
+    // 提取特征矩阵
+    const featuresMatrix = extractFeatureMatrix(windows);
     const { mean, cov } = computeGlobalCovariance(featuresMatrix);
     
-    // 存入全局缓存
-    setGlobalStats(mean, cov);
+    // 存入上下文，供后续步骤复用
+    context.mahalStats = { mean, cov };
     
     // 计算每个窗口的马氏距离
-    const distances = windows.map(win => {
-        const vec = extractFeatures(win.features);
-        return computeMahalanobis(vec, mean, cov);
-    });
+    const distances = windows.map(win => 
+        computeMahalanobis(extractFeatures(win.features), mean, cov)
+    );
     
-    // 设置阈值：99% 分位数
+    // 缓存距离数组供第二步使用
+    context.mahalDistances = distances;
+    
+    // 设置阈值
     const sorted = [...distances].sort((a,b)=>a-b);
-    const threshold = sorted[Math.floor(sorted.length * 0.99)];
-    if (DEBUG) console.log(`马氏距离阈值: ${threshold.toFixed(4)}`);
+    const threshold = sorted[Math.floor(sorted.length * config.mahalPercentile)];
+    context.mahalThreshold = threshold;
     
+    if (config.debug) console.log(`马氏距离阈值 (${config.mahalPercentile*100}%): ${threshold.toFixed(4)}`);
+    
+    // 标记异常窗口
     for (let i = 0; i < windows.length; i++) {
         windows[i].isAbnormal = distances[i] > threshold;
-        if (DEBUG && windows[i].isAbnormal) console.log(`窗口 ${i} 异常，距离=${distances[i].toFixed(4)}`);
+        if (config.debug && windows[i].isAbnormal) {
+            console.log(`窗口 ${i} 异常，距离=${distances[i].toFixed(4)}`);
+        }
     }
     
-    const fragments = mergeWindows(windows);
-    if (DEBUG) console.log(`[步骤1] 检测到 ${fragments.length} 个片段`);
+    // 合并异常窗口
+    const fragments = mergeIntervals(
+        windows.filter(w => w.isAbnormal).map(w => ({ start: w.start, end: w.end }))
+    );
+    
+    if (config.debug) console.log(`[步骤1] 检测到 ${fragments.length} 个片段`);
     return fragments;
 }

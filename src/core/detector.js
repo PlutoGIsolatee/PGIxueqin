@@ -1,7 +1,9 @@
 import { runPipeline } from './pipeline.js';
+import { config } from './config.js';
+import { computeWindowFeatures, computeMeanStd } from './stats.js';
 import {
     stepMahalanobisWindowDetection,
-    stepMahalanobisRefine,   // 使用新步骤
+    stepMahalanobisRefine,
     stepConsecutiveDigits,
     stepLowEntropyParagraph,
     stepNormalParagraphExemption,
@@ -20,6 +22,14 @@ const STEPS = [
 ];
 
 export function detectNoiseFragments(text) {
-    const { finalIntervals, stepResults } = runPipeline(STEPS, text);
+    const context = {};
+    
+    // 预计算全局统计并存入上下文（供步骤5使用）
+    const windows = computeWindowFeatures(text, config.windowSize, config.step);
+    if (windows.length > 0) {
+        context.globalStats = computeMeanStd(windows);
+    }
+    
+    const { finalIntervals, stepResults } = runPipeline(STEPS, text, context);
     return { fragments: finalIntervals, stepResults };
 }
