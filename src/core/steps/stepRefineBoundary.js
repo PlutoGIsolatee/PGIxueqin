@@ -4,7 +4,7 @@ import { computeAnomalyScore } from '../anomaly.js';
 // 细粒度扫描参数（已调整为窗口=10，步长=1）
 const REFINE_WINDOW_SIZE = 10;    // 窗口大小改为 10
 const REFINE_STEP = 1;            // 步长改为 1
-const REFINE_SCORE_THRESHOLD = 0.7; // 保留分数阈值
+const REFINE_SCORE_THRESHOLD = 0.5; // 保留分数阈值
 const MAX_WINDOW_GAP = 5;         // 合并窗口时允许的最大间隔（相应调小）
 const DEBUG = true;
 
