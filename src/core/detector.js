@@ -1,7 +1,7 @@
 import { runPipeline } from './pipeline.js';
 import {
-    stepSlidingWindowDetection,
-    stepRefineBoundary,
+    stepMahalanobisWindowDetection,
+    stepMahalanobisRefine,   // 使用新步骤
     stepConsecutiveDigits,
     stepLowEntropyParagraph,
     stepNormalParagraphExemption,
@@ -9,10 +9,9 @@ import {
     stepMergeIntervals
 } from './steps/index.js';
 
-// 步骤定义（带名称）
 const STEPS = [
-    { name: '1. 滑动窗口粗检测', fn: stepSlidingWindowDetection },
-    { name: '2. 细粒度精确定位', fn: stepRefineBoundary },
+    { name: '1. 马氏距离滑动窗口检测', fn: stepMahalanobisWindowDetection },
+    { name: '2. 马氏距离精确定位', fn: stepMahalanobisRefine },
     { name: '3. 连续数字豁免', fn: stepConsecutiveDigits },
     { name: '4. 低熵段落豁免', fn: stepLowEntropyParagraph },
     { name: '5. 正常段落豁免', fn: stepNormalParagraphExemption },
