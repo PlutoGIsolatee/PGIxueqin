@@ -6,7 +6,7 @@ import {
 } from '../paragraph.js';
 import { isWindowAbnormalBy3Sigma } from '../anomaly.js';
 import { subtractIntervals } from '../utils/intervalUtils.js';
-import { config } from '../config.js';
+import { config } from '../../config.js';
 import { createLogger } from '../utils/logger.js';
 import { computeWindowFeatures, computeMeanStd } from '../stats.js';
 
@@ -39,7 +39,6 @@ export function stepNormalParagraphExemption(intervals, text, context) {
     }
     logger.debug(`共 ${paragraphs.length} 个段落`);
     
-    // 从上下文获取全局统计
     let globalStats = context.globalStats;
     if (!globalStats) {
         logger.info('上下文中无全局统计，重新计算...');
@@ -60,7 +59,6 @@ export function stepNormalParagraphExemption(intervals, text, context) {
         const frag = intervals[idx];
         logger.debug(`处理片段 ${idx + 1}/${intervals.length}: ${frag.start}-${frag.end} (长度=${frag.end - frag.start})`);
         
-        // 找出与片段重叠的所有段落
         const overlappingParas = [];
         for (let i = 0; i < paragraphs.length; i++) {
             const para = paragraphs[i];
@@ -77,7 +75,7 @@ export function stepNormalParagraphExemption(intervals, text, context) {
         
         const removeIntervals = [];
         
-        // 1. 完全包含的段落
+        // 完全包含的段落
         for (const { index, para } of overlappingParas) {
             if (para.start >= frag.start && para.end <= frag.end) {
                 if (isNormalText(text, para.start, para.end, globalStats, index)) {
@@ -87,7 +85,7 @@ export function stepNormalParagraphExemption(intervals, text, context) {
             }
         }
         
-        // 2. 左边界段落
+        // 左边界段落
         const leftPara = overlappingParas.find(p => p.para.start <= frag.start && p.para.end > frag.start);
         if (leftPara) {
             const { index, para } = leftPara;
@@ -105,7 +103,7 @@ export function stepNormalParagraphExemption(intervals, text, context) {
             }
         }
         
-        // 3. 右边界段落
+        // 右边界段落
         const rightPara = overlappingParas.find(p => p.para.start < frag.end && p.para.end >= frag.end);
         if (rightPara) {
             const { index, para } = rightPara;

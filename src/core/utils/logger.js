@@ -1,4 +1,4 @@
-import { config } from '../config.js';
+import { config } from '../../config.js';
 
 // 日志级别定义
 export const LOG_LEVELS = {

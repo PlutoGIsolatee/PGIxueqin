@@ -5,7 +5,7 @@ import {
     precomputeParagraphStats 
 } from '../paragraph.js';
 import { subtractIntervals } from '../utils/intervalUtils.js';
-import { config } from '../config.js';
+import { config } from '../../config.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('Step4');
@@ -16,7 +16,6 @@ export function stepLowEntropyParagraph(intervals, text, context) {
     logger.info('开始低熵段落豁免');
     logger.debug(`输入片段数量: ${intervals.length}`);
     
-    // 确保段落缓存已预计算
     let paragraphs = getCachedParagraphs();
     if (!paragraphs || paragraphs.length === 0) {
         logger.info('段落缓存为空，执行预计算...');

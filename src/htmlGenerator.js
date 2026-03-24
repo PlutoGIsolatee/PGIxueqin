@@ -1,20 +1,15 @@
 /**
- * 生成带选项卡的多步骤高亮 HTML（所有步骤共享滚动位置）
+ * 生成带配置面板的多步骤高亮 HTML
  * @param {string} text - 原始文本
  * @param {Array} finalFragments - 最终片段（用于默认显示）
  * @param {Array} stepResults - 每步的结果 [{ stepName, intervals }]
+ * @param {Array} usedSteps - 实际执行的步骤列表
+ * @param {Array} availableSteps - 所有可用步骤列表
  * @returns {string}
  */
-export function generateHtml(text, finalFragments, stepResults) {
-    // 预定义不同步骤的高亮颜色
+export function generateHtml(text, finalFragments, stepResults, usedSteps, availableSteps) {
     const stepColors = [
-        '#ffcccc',  // 浅红
-        '#ffe0cc',  // 浅橙
-        '#fff0cc',  // 浅黄
-        '#e0ffe0',  // 浅绿
-        '#cce0ff',  // 浅蓝
-        '#e0ccff',  // 浅紫
-        '#ffccff'   // 粉红
+        '#ffcccc', '#ffe0cc', '#fff0cc', '#e0ffe0', '#cce0ff', '#e0ccff', '#ffccff'
     ];
     
     // 为每个步骤生成高亮文本
@@ -33,7 +28,16 @@ export function generateHtml(text, finalFragments, stepResults) {
         `;
     }).join('');
     
-    // 生成选项卡按钮
+    // 生成步骤配置面板（拖拽排序）
+    const stepsList = availableSteps.map((step, idx) => `
+        <li data-step-name="${step.name}" class="step-item" draggable="true">
+            <span class="step-handle">☰</span>
+            <input type="checkbox" class="step-checkbox" value="${step.name}" ${usedSteps.some(s => s.name === step.name) ? 'checked' : ''}>
+            <span class="step-name">${escapeHtml(step.displayName)}</span>
+        </li>
+    `).join('');
+    
+    // 选项卡按钮
     const tabButtons = stepResults.map((result, idx) => `
         <button class="tab-button" data-step="${idx}">${escapeHtml(result.stepName)} (${result.intervals.length})</button>
     `).join('');
@@ -43,7 +47,7 @@ export function generateHtml(text, finalFragments, stepResults) {
         <html lang="zh-CN">
         <head>
             <meta charset="UTF-8">
-            <title>噪声片段检测 - 多步骤可视化</title>
+            <title>噪声片段检测 - 可配置流水线</title>
             <style>
                 * { margin: 0; padding: 0; box-sizing: border-box; }
                 body {
@@ -60,6 +64,52 @@ export function generateHtml(text, finalFragments, stepResults) {
                     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
                     padding: 20px;
                 }
+                .config-panel {
+                    background: #f0f0f0;
+                    border-radius: 8px;
+                    padding: 15px;
+                    margin-bottom: 20px;
+                }
+                .config-panel h3 {
+                    margin-bottom: 10px;
+                }
+                .step-list {
+                    list-style: none;
+                    padding: 0;
+                    margin: 10px 0;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                }
+                .step-item {
+                    background: white;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    padding: 5px 10px;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    cursor: move;
+                }
+                .step-handle {
+                    cursor: grab;
+                    color: #888;
+                }
+                .step-checkbox {
+                    cursor: pointer;
+                }
+                .step-name {
+                    font-size: 14px;
+                }
+                .config-actions {
+                    margin-top: 10px;
+                    display: flex;
+                    gap: 10px;
+                }
+                button {
+                    padding: 6px 12px;
+                    cursor: pointer;
+                }
                 .tabs {
                     display: flex;
                     flex-wrap: wrap;
@@ -74,11 +124,6 @@ export function generateHtml(text, finalFragments, stepResults) {
                     border: 1px solid #ccc;
                     border-radius: 4px 4px 0 0;
                     cursor: pointer;
-                    font-size: 14px;
-                    transition: all 0.2s;
-                }
-                .tab-button:hover {
-                    background: #e0e0e0;
                 }
                 .tab-button.active {
                     background: #007bff;
@@ -88,16 +133,11 @@ export function generateHtml(text, finalFragments, stepResults) {
                 .step-content {
                     animation: fadeIn 0.3s ease;
                 }
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
                 .step-info {
                     background: #e9ecef;
                     padding: 10px;
                     border-radius: 5px;
                     margin-bottom: 15px;
-                    font-size: 14px;
                 }
                 .highlighted-text {
                     white-space: pre-wrap;
@@ -108,14 +148,10 @@ export function generateHtml(text, finalFragments, stepResults) {
                     padding: 15px;
                     border-radius: 5px;
                     overflow-x: auto;
-                    max-height: 80vh;
+                    max-height: 60vh;
                     overflow-y: auto;
                 }
-                mark {
-                    border-radius: 3px;
-                    padding: 0 2px;
-                    color: #000;
-                }
+                mark { border-radius: 3px; padding: 0 2px; }
                 .legend {
                     margin-top: 20px;
                     padding: 10px;
@@ -123,27 +159,30 @@ export function generateHtml(text, finalFragments, stepResults) {
                     border-radius: 5px;
                     font-size: 12px;
                 }
-                .legend-item {
-                    display: inline-block;
-                    margin-right: 15px;
-                }
-                .legend-color {
-                    display: inline-block;
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 3px;
-                    margin-right: 5px;
-                    vertical-align: middle;
-                }
+                .legend-item { display: inline-block; margin-right: 15px; }
+                .legend-color { display: inline-block; width: 20px; height: 20px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
             </style>
         </head>
         <body>
         <div class="container">
-            <h2>噪声片段检测 - 分步可视化</h2>
-            <div class="tabs">
+            <h2>噪声片段检测 - 可配置流水线</h2>
+            <div class="config-panel">
+                <h3>步骤配置</h3>
+                <p>拖拽调整顺序，勾选启用步骤，点击“重新计算”应用配置。</p>
+                <ul id="step-list" class="step-list">
+                    ${stepsList}
+                </ul>
+                <div class="config-actions">
+                    <button id="apply-config">重新计算</button>
+                    <button id="reset-config">重置默认</button>
+                </div>
+            </div>
+            <div class="tabs" id="tabs">
                 ${tabButtons}
             </div>
-            ${stepHtmls}
+            <div id="step-contents">
+                ${stepHtmls}
+            </div>
             <div class="legend">
                 <strong>图例：</strong>
                 ${stepResults.map((result, idx) => `
@@ -155,24 +194,19 @@ export function generateHtml(text, finalFragments, stepResults) {
             </div>
         </div>
         <script>
-            // 所有步骤的滚动容器
+            // 存储滚动容器
             const scrollContainers = [];
-            // 当前激活的选项卡索引
-            let activeStep = 0;
-            // 正在同步标志，避免循环触发
             let syncing = false;
             
-            // 获取所有滚动容器
+            // 获取所有滚动容器并绑定同步滚动
             for (let i = 0; i < ${stepResults.length}; i++) {
                 const el = document.getElementById('step-scroll-' + i);
                 if (el) {
                     scrollContainers.push(el);
-                    // 为每个容器绑定滚动事件
                     el.addEventListener('scroll', function(e) {
                         if (syncing) return;
                         syncing = true;
                         const targetScrollTop = this.scrollTop;
-                        // 同步到所有其他容器
                         for (let j = 0; j < scrollContainers.length; j++) {
                             if (scrollContainers[j] !== this) {
                                 scrollContainers[j].scrollTop = targetScrollTop;
@@ -183,51 +217,111 @@ export function generateHtml(text, finalFragments, stepResults) {
                 }
             }
             
-            // 选项卡切换逻辑
+            // 选项卡切换
             document.querySelectorAll('.tab-button').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    // 获取当前激活的滚动位置（从当前显示的步骤）
                     const currentVisible = document.querySelector('.step-content[style*="display: block"]');
                     let currentScrollTop = 0;
                     if (currentVisible) {
                         const visiblePre = currentVisible.querySelector('.highlighted-text');
                         if (visiblePre) currentScrollTop = visiblePre.scrollTop;
                     }
-                    
-                    // 移除所有活动状态
                     document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
                     document.querySelectorAll('.step-content').forEach(c => c.style.display = 'none');
-                    
-                    // 激活当前选项卡
                     btn.classList.add('active');
                     const stepId = parseInt(btn.getAttribute('data-step'));
-                    activeStep = stepId;
                     const targetContent = document.getElementById('step-' + stepId);
                     if (targetContent) {
                         targetContent.style.display = 'block';
-                        // 恢复滚动位置（使用之前保存的全局位置，但这里我们直接使用 currentScrollTop 来同步）
                         const targetPre = targetContent.querySelector('.highlighted-text');
                         if (targetPre && currentScrollTop !== undefined) {
-                            // 为了避免触发滚动事件循环，暂时移除监听？但我们已经设置了 syncing 标志，所以安全
                             targetPre.scrollTop = currentScrollTop;
                         }
                     }
                 });
             });
-            
-            // 默认激活第一个选项卡
             if (document.querySelector('.tab-button')) {
                 document.querySelector('.tab-button').classList.add('active');
             }
+            
+            // 拖拽排序
+            let dragSrc = null;
+            const stepList = document.getElementById('step-list');
+            const items = stepList.querySelectorAll('.step-item');
+            items.forEach(item => {
+                item.setAttribute('draggable', 'true');
+                item.addEventListener('dragstart', (e) => {
+                    dragSrc = item;
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                });
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    if (dragSrc !== item) {
+                        stepList.insertBefore(dragSrc, item.nextSibling);
+                    }
+                });
+            });
+            
+            // 获取当前步骤顺序和启用的步骤
+            function getCurrentStepConfig() {
+                const order = [];
+                const items = stepList.querySelectorAll('.step-item');
+                items.forEach(item => {
+                    const name = item.getAttribute('data-step-name');
+                    const enabled = item.querySelector('.step-checkbox').checked;
+                    if (enabled) {
+                        order.push(name);
+                    }
+                });
+                return { steps: order };
+            }
+            
+            // 应用配置
+            document.getElementById('apply-config').addEventListener('click', async () => {
+                const config = getCurrentStepConfig();
+                const response = await fetch('/api/run', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config)
+                });
+                if (response.ok) {
+                    const html = await response.text();
+                    document.open();
+                    document.write(html);
+                    document.close();
+                } else {
+                    const error = await response.text();
+                    alert('重新计算失败: ' + error);
+                }
+            });
+            
+            // 重置默认
+            const defaultOrder = ${JSON.stringify(usedSteps.map(s => s.name))};
+            document.getElementById('reset-config').addEventListener('click', async () => {
+                const items = stepList.querySelectorAll('.step-item');
+                const defaultList = [];
+                defaultOrder.forEach(name => {
+                    const item = Array.from(items).find(i => i.getAttribute('data-step-name') === name);
+                    if (item) defaultList.push(item);
+                });
+                stepList.innerHTML = '';
+                defaultList.forEach(item => stepList.appendChild(item));
+                items.forEach(item => {
+                    const cb = item.querySelector('.step-checkbox');
+                    cb.checked = true;
+                });
+                document.getElementById('apply-config').click();
+            });
         </script>
         </body>
         </html>
     `;
 }
 
-/**
- * 应用高亮标记（与之前相同）
- */
 function applyHighlights(text, intervals, color) {
     if (!intervals || intervals.length === 0) {
         return escapeHtml(text);

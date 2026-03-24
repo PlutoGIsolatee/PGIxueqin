@@ -1,57 +1,77 @@
 import http from 'http';
 import fs from 'fs/promises';
-import { detectNoiseFragments } from './core/detector.js';
+import { detectNoiseFragments, getAvailableSteps } from './core/detector.js';
 import { generateHtml } from './htmlGenerator.js';
+import { config } from './config.js';
 
 const PORT = 3000;
 const SAMPLE_FILE = './sample.txt';
 
 let cachedHtml = null;
-let loadError = null;
+let cachedSteps = null;
+let currentText = null;
 
-async function loadAndProcess() {
+async function loadText() {
     try {
-        const text = await fs.readFile(SAMPLE_FILE, 'utf-8');
-        const { fragments, stepResults } = detectNoiseFragments(text);
-        cachedHtml = generateHtml(text, fragments, stepResults);
-        console.log('预处理完成，已缓存结果。');
+        currentText = await fs.readFile(SAMPLE_FILE, 'utf-8');
+        return currentText;
     } catch (err) {
-        console.error('预处理失败:', err);
-        loadError = err;
+        console.error('读取文件失败:', err);
+        throw err;
     }
 }
 
+async function initialize() {
+    await loadText();
+    cachedSteps = getAvailableSteps();
+    // 初始计算默认结果
+    const { fragments, stepResults, usedSteps } = detectNoiseFragments(currentText);
+    cachedHtml = generateHtml(currentText, fragments, stepResults, usedSteps, cachedSteps);
+    console.log('预处理完成，已缓存结果。');
+}
+
 const server = http.createServer(async (req, res) => {
-    if (req.url === '/' || req.url === '/index.html') {
-        if (loadError) {
-            res.writeHead(500, { 'Content-Type': 'text/html; charset=utf-8' });
-            res.end(`
-                <!DOCTYPE html>
-                <html>
-                <head><title>错误</title></head>
-                <body>
-                    <h1>读取或处理 sample.txt 失败</h1>
-                    <p>请检查文件是否存在且格式正确。</p>
-                    <p>错误详情: ${loadError.message}</p>
-                </body>
-                </html>
-            `);
-            return;
-        }
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    
+    if (url.pathname === '/' || url.pathname === '/index.html') {
         if (cachedHtml) {
             res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
             res.end(cachedHtml);
         } else {
-            res.writeHead(503, { 'Content-Type': 'text/plain; charset=utf-8' });
-            res.end('服务尚未就绪，请稍后再试。');
+            res.writeHead(503);
+            res.end('服务尚未就绪');
         }
-    } else {
+    } 
+    else if (url.pathname === '/api/steps') {
+        // 返回可用步骤列表
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(cachedSteps));
+    }
+    else if (url.pathname === '/api/run' && req.method === 'POST') {
+        // 接收步骤配置并计算
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', async () => {
+            try {
+                const stepConfig = JSON.parse(body);
+                const { fragments, stepResults, usedSteps } = detectNoiseFragments(currentText, stepConfig);
+                const html = generateHtml(currentText, fragments, stepResults, usedSteps, cachedSteps);
+                res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+                res.end(html);
+            } catch (err) {
+                console.error('计算失败:', err);
+                res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+                res.end('计算失败: ' + err.message);
+            }
+        });
+    }
+    else {
         res.writeHead(404);
         res.end('Not Found');
     }
 });
 
-loadAndProcess().then(() => {
+initialize().then(() => {
     server.listen(PORT, () => {
         console.log(`Server running at http://localhost:${PORT}`);
     });

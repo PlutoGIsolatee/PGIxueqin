@@ -1,12 +1,11 @@
 import { countClasses } from '../../classify.js';
 import { isWindowAbnormalBy3Sigma } from '../anomaly.js';
 import { computeWindowFeatures, computeMeanStd } from '../stats.js';
-import { config } from '../config.js';
+import { config } from '../../config.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('Step3');
 
-// 缓存全局统计
 let cachedGlobalStats = null;
 
 function getGlobalStats(text) {

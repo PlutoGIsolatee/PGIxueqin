@@ -1,5 +1,5 @@
 import { mergeIntervals } from '../utils/intervalUtils.js';
-import { config } from '../config.js';
+import { config } from '../../config.js';
 import { createLogger } from '../utils/logger.js';
 
 const logger = createLogger('Step7');
