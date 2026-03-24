@@ -36,32 +36,70 @@ function buildSteps(stepNames) {
     })).filter(step => step.fn);
 }
 
-export function detectNoiseFragments(text, stepConfig = null) {
-    const context = {};
+export function detectNoiseFragments(text, stepConfig = null, paramConfig = null) {
+    // 保存原始配置以便恢复（可选）
+    const originalConfig = { ...config };
     
-    // 预计算全局统计
-    const windows = computeWindowFeatures(text, config.windowSize, config.step);
-    if (windows.length > 0) {
-        context.globalStats = computeMeanStd(windows);
+    try {
+        // 合并参数配置
+        if (paramConfig && paramConfig.params) {
+            console.log('应用参数配置:', paramConfig.params);
+            for (const [key, value] of Object.entries(paramConfig.params)) {
+                if (key === 'consecutiveDigitsPattern' && typeof value === 'string') {
+                    try {
+                        config[key] = new RegExp(value);
+                        console.log(`设置正则 ${key}:`, config[key]);
+                    } catch (e) {
+                        console.warn(`正则表达式解析失败: ${value}`);
+                    }
+                } else if (key === 'debug') {
+                    config[key] = value === true || value === 'true';
+                } else if (typeof value === 'number' || !isNaN(parseFloat(value))) {
+                    config[key] = parseFloat(value);
+                } else {
+                    config[key] = value;
+                }
+            }
+        }
+        
+        console.log('当前配置:', {
+            windowSize: config.windowSize,
+            step: config.step,
+            mahalPercentile: config.mahalPercentile,
+            consecutiveDigitsPattern: config.consecutiveDigitsPattern?.source
+        });
+        
+        const context = {};
+        
+        // 预计算全局统计
+        const windows = computeWindowFeatures(text, config.windowSize, config.step);
+        if (windows.length > 0) {
+            context.globalStats = computeMeanStd(windows);
+        }
+        
+        // 确定要执行的步骤
+        let steps;
+        if (stepConfig && stepConfig.steps && stepConfig.steps.length > 0) {
+            steps = buildSteps(stepConfig.steps);
+        } else {
+            // 默认步骤顺序
+            steps = [
+                { name: '1. 马氏距离滑动窗口检测', fn: stepMahalanobisWindowDetection },
+                { name: '2. 马氏距离精确定位', fn: stepMahalanobisRefine },
+                { name: '3. 连续数字豁免', fn: stepConsecutiveDigits },
+                { name: '4. 低熵段落豁免', fn: stepLowEntropyParagraph },
+                { name: '5. 正常段落豁免', fn: stepNormalParagraphExemption },
+                { name: '6. 修剪空白', fn: stepTrimWhitespace },
+                { name: '7. 合并区间', fn: stepMergeIntervals }
+            ];
+        }
+        
+        const { finalIntervals, stepResults } = runPipeline(steps, text, context);
+        return { fragments: finalIntervals, stepResults, usedSteps: steps };
+    } catch (err) {
+        console.error('检测过程出错:', err);
+        // 恢复配置
+        Object.assign(config, originalConfig);
+        throw err;
     }
-    
-    // 确定要执行的步骤
-    let steps;
-    if (stepConfig && stepConfig.steps && stepConfig.steps.length > 0) {
-        steps = buildSteps(stepConfig.steps);
-    } else {
-        // 默认步骤顺序
-        steps = [
-            { name: '1. 马氏距离滑动窗口检测', fn: stepMahalanobisWindowDetection },
-            { name: '2. 马氏距离精确定位', fn: stepMahalanobisRefine },
-            { name: '3. 连续数字豁免', fn: stepConsecutiveDigits },
-            { name: '4. 低熵段落豁免', fn: stepLowEntropyParagraph },
-            { name: '5. 正常段落豁免', fn: stepNormalParagraphExemption },
-            { name: '6. 修剪空白', fn: stepTrimWhitespace },
-            { name: '7. 合并区间', fn: stepMergeIntervals }
-        ];
-    }
-    
-    const { finalIntervals, stepResults } = runPipeline(steps, text, context);
-    return { fragments: finalIntervals, stepResults, usedSteps: steps };
 }
