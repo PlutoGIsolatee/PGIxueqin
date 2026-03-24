@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "@formatjs/intl-segmenter": "^12.1.2",
-    "@ig3/node-jieba-js": "^0.0.8"
+    "@ig3/node-jieba-js": "^0.0.8",
+    "ejs": "^5.0.1"
   }
 }
