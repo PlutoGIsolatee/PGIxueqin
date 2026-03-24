@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>噪声片段检测 - 可配置流水线</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', '微软雅黑', monospace;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            .config-panel { padding: 10px; }
+            .step-item { font-size: 12px; padding: 3px 6px; }
+            button { padding: 4px 8px; font-size: 12px; }
+            .tab-button { padding: 4px 8px; font-size: 12px; }
+        }
+        .config-panel {
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .config-panel h3 {
+            margin-bottom: 10px;
+        }
+        .config-sections {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        .config-section {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .config-section h4 {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+        .config-field {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .config-field label {
+            font-size: 12px;
+            width: 100px;
+            font-weight: 500;
+        }
+        .config-field input {
+            flex: 1;
+            min-width: 80px;
+            padding: 4px 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .config-field input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        .config-field .hint {
+            font-size: 10px;
+            color: #666;
+        }
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .step-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: move;
+        }
+        .step-handle {
+            cursor: grab;
+            color: #888;
+        }
+        .step-checkbox {
+            cursor: pointer;
+        }
+        .step-name {
+            font-size: 14px;
+        }
+        .config-actions {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        button {
+            padding: 6px 12px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button.secondary {
+            background: #6c757d;
+        }
+        button.secondary:hover {
+            background: #545b62;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            overflow-x: auto;
+        }
+        .tab-button {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            color: #333;
+        }
+        .tab-button.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .step-content {
+            animation: fadeIn 0.3s ease;
+        }
+        .step-info {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .highlighted-text {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 14px;
+            background: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        mark { border-radius: 3px; padding: 0 2px; }
+        .legend {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .legend-item { display: inline-flex; align-items: center; margin-right: 15px; }
+        .legend-color { display: inline-block; width: 20px; height: 20px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .loading.active {
+            display: flex;
+        }
+        .loading-spinner {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="loading" id="loading">
+    <div class="loading-spinner">正在重新计算...</div>
+</div>
+<div class="container">
+    <h2>噪声片段检测 - 可配置流水线</h2>
+    
+    <div class="config-panel">
+        <h3>步骤配置</h3>
+        <p>拖拽调整顺序，勾选启用步骤，点击“重新计算”应用配置。</p>
+        <ul id="step-list" class="step-list">
+            <% usedSteps.forEach(step => { %>
+                <li data-step-name="<%= step.name %>" class="step-item" draggable="true">
+                    <span class="step-handle">☰</span>
+                    <input type="checkbox" class="step-checkbox" value="<%= step.name %>" checked>
+                    <span class="step-name"><%= step.displayName %></span>
+                </li>
+            <% }); %>
+            <% availableSteps.forEach(step => { %>
+                <% if (!usedSteps.some(s => s.name === step.name)) { %>
+                    <li data-step-name="<%= step.name %>" class="step-item" draggable="true">
+                        <span class="step-handle">☰</span>
+                        <input type="checkbox" class="step-checkbox" value="<%= step.name %>">
+                        <span class="step-name"><%= step.displayName %></span>
+                    </li>
+                <% } %>
+            <% }); %>
+        </ul>
+        <div class="config-actions">
+            <button id="apply-config">重新计算</button>
+            <button id="reset-config" class="secondary">重置默认</button>
+        </div>
+    </div>
+    
+    <div class="config-panel">
+        <h3>参数配置</h3>
+        <div class="config-sections" id="config-sections">
+            <%- include('partials/configForm', { serverConfig, currentParamConfig }) %>
+        </div>
+        <div class="config-actions">
+            <button id="apply-params">应用参数并重新计算</button>
+            <button id="reset-params" class="secondary">重置参数</button>
+        </div>
+    </div>
+    
+    <div class="tabs" id="tabs">
+        <% stepResults.forEach((result, idx) => { %>
+            <button class="tab-button" data-step="<%= idx %>"><%= result.stepName %> (<%= result.intervals.length %>)</button>
+        <% }); %>
+    </div>
+    <div id="step-contents">
+        <% stepResults.forEach((result, idx) => { 
+            const color = stepColors[idx % stepColors.length];
+            const highlighted = applyHighlights(text, result.intervals, color);
+        %>
+            <div id="step-<%= idx %>" class="step-content" style="display: <%= idx === 0 ? 'block' : 'none' %>">
+                <div class="step-info">
+                    <strong><%= result.stepName %></strong>
+                    <span>检测到 <%= result.intervals.length %> 个片段</span>
+                    <% if (result.error) { %>
+                        <span style="color:red">错误: <%= result.error %></span>
+                    <% } %>
+                </div>
+                <pre id="step-scroll-<%= idx %>" class="highlighted-text"><%- highlighted %></pre>
+            </div>
+        <% }); %>
+    </div>
+    <div class="legend">
+        <strong>图例：</strong>
+        <% stepResults.forEach((result, idx) => { %>
+            <div class="legend-item">
+                <span class="legend-color" style="background: <%= stepColors[idx % stepColors.length] %>"></span>
+                <span><%= result.stepName %></span>
+            </div>
+        <% }); %>
+    </div>
+</div>
+
+<script>
+    const scrollContainers = [];
+    let syncing = false;
+    
+    for (let i = 0; i < <%= stepResults.length %>; i++) {
+        const el = document.getElementById('step-scroll-' + i);
+        if (el) {
+            scrollContainers.push(el);
+            el.addEventListener('scroll', function(e) {
+                if (syncing) return;
+                syncing = true;
+                const targetScrollTop = this.scrollTop;
+                for (let j = 0; j < scrollContainers.length; j++) {
+                    if (scrollContainers[j] !== this) {
+                        scrollContainers[j].scrollTop = targetScrollTop;
+                    }
+                }
+                syncing = false;
+            });
+        }
+    }
+    
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const currentVisible = document.querySelector('.step-content[style*="display: block"]');
+            let currentScrollTop = 0;
+            if (currentVisible) {
+                const visiblePre = currentVisible.querySelector('.highlighted-text');
+                if (visiblePre) currentScrollTop = visiblePre.scrollTop;
+            }
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.step-content').forEach(c => c.style.display = 'none');
+            btn.classList.add('active');
+            const stepId = parseInt(btn.getAttribute('data-step'));
+            const targetContent = document.getElementById('step-' + stepId);
+            if (targetContent) {
+                targetContent.style.display = 'block';
+                const targetPre = targetContent.querySelector('.highlighted-text');
+                if (targetPre && currentScrollTop !== undefined) {
+                    targetPre.scrollTop = currentScrollTop;
+                }
+            }
+        });
+    });
+    if (document.querySelector('.tab-button')) {
+        document.querySelector('.tab-button').classList.add('active');
+    }
+    
+    let dragSrc = null;
+    const stepList = document.getElementById('step-list');
+    const items = stepList.querySelectorAll('.step-item');
+    items.forEach(item => {
+        item.setAttribute('draggable', 'true');
+        item.addEventListener('dragstart', (e) => {
+            dragSrc = item;
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        item.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        });
+        item.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (dragSrc !== item) {
+                stepList.insertBefore(dragSrc, item.nextSibling);
+            }
+        });
+    });
+    
+    function getCurrentStepConfig() {
+        const order = [];
+        const items = stepList.querySelectorAll('.step-item');
+        items.forEach(item => {
+            const name = item.getAttribute('data-step-name');
+            const enabled = item.querySelector('.step-checkbox').checked;
+            if (enabled) {
+                order.push(name);
+            }
+        });
+        return order;
+    }
+    
+    function getCurrentParams() {
+        const params = {};
+        document.querySelectorAll('.config-field input').forEach(input => {
+            const name = input.getAttribute('data-param');
+            if (name) {
+                let value;
+                if (input.type === 'checkbox') {
+                    value = input.checked;
+                } else if (input.type === 'number') {
+                    value = parseFloat(input.value);
+                } else {
+                    value = input.value;
+                }
+                params[name] = value;
+            }
+        });
+        return params;
+    }
+    
+    function showLoading() {
+        document.getElementById('loading').classList.add('active');
+    }
+    
+    function refreshWithConfig(stepOrder, params) {
+        showLoading();
+        const stepsParam = encodeURIComponent(JSON.stringify(stepOrder));
+        const paramsParam = encodeURIComponent(JSON.stringify(params));
+        const newUrl = '/?steps=' + stepsParam + '&params=' + paramsParam;
+        window.location.href = newUrl;
+    }
+    
+    document.getElementById('apply-config').addEventListener('click', () => {
+        const stepOrder = getCurrentStepConfig();
+        const params = getCurrentParams();
+        refreshWithConfig(stepOrder, params);
+    });
+    
+    document.getElementById('apply-params').addEventListener('click', () => {
+        const stepOrder = getCurrentStepConfig();
+        const params = getCurrentParams();
+        refreshWithConfig(stepOrder, params);
+    });
+    
+    document.getElementById('reset-params').addEventListener('click', () => {
+        refreshWithConfig(getCurrentStepConfig(), {});
+    });
+    
+    const defaultOrder = <%- JSON.stringify(usedSteps.map(s => s.name)) %>;
+    document.getElementById('reset-config').addEventListener('click', () => {
+        refreshWithConfig(defaultOrder, getCurrentParams());
+    });
+</script>
+</body>
+</html>

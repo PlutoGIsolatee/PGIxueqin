@@ -1,8 +1,13 @@
 import http from 'http';
 import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { detectNoiseFragments, getAvailableSteps } from './core/detector.js';
 import { generateHtml } from './htmlGenerator.js';
 import { config } from './config.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = 3000;
 const SAMPLE_FILE = './sample.txt';
@@ -31,7 +36,6 @@ const server = http.createServer(async (req, res) => {
     
     if (url.pathname === '/' || url.pathname === '/index.html') {
         try {
-            // 解析查询参数
             const stepsParam = url.searchParams.get('steps');
             const paramsParam = url.searchParams.get('params');
             
@@ -54,14 +58,23 @@ const server = http.createServer(async (req, res) => {
                 }
             }
             
-            // 执行检测
             const { fragments, stepResults, usedSteps } = detectNoiseFragments(currentText, stepConfig, paramConfig);
             const serverConfig = { ...config };
-            // 处理正则表达式用于显示
             if (serverConfig.consecutiveDigitsPattern && typeof serverConfig.consecutiveDigitsPattern === 'object') {
                 serverConfig.consecutiveDigitsPattern = serverConfig.consecutiveDigitsPattern.source;
             }
-            const html = generateHtml(currentText, fragments, stepResults, usedSteps, cachedSteps, serverConfig, stepConfig, paramConfig);
+            
+            const html = await generateHtml(
+                currentText,
+                fragments,
+                stepResults,
+                usedSteps,
+                cachedSteps,
+                serverConfig,
+                stepConfig,
+                paramConfig
+            );
+            
             res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
             res.end(html);
         } catch (err) {
@@ -71,7 +84,6 @@ const server = http.createServer(async (req, res) => {
         }
     } 
     else if (url.pathname === '/api/steps') {
-        // 返回可用步骤列表（保持兼容）
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(cachedSteps));
     }

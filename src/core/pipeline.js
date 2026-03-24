@@ -2,12 +2,14 @@ import { createLogger } from './utils/logger.js';
 
 const logger = createLogger('Pipeline');
 
-/**
- * 执行步骤流水线并记录每步结果
- */
 export function runPipeline(steps, text, context = {}) {
     let intervals = null;
     const stepResults = [];
+    
+    if (!steps || steps.length === 0) {
+        logger.warn('没有步骤可执行');
+        return { finalIntervals: [], stepResults: [], context };
+    }
     
     logger.info(`开始执行流水线，共 ${steps.length} 个步骤`);
     

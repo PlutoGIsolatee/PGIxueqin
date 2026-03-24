@@ -11,7 +11,6 @@ import {
     stepMergeIntervals
 } from './steps/index.js';
 
-// 步骤映射表
 const STEP_MAP = {
     'stepMahalanobisWindowDetection': stepMahalanobisWindowDetection,
     'stepMahalanobisRefine': stepMahalanobisRefine,
@@ -37,18 +36,14 @@ function buildSteps(stepNames) {
 }
 
 export function detectNoiseFragments(text, stepConfig = null, paramConfig = null) {
-    // 保存原始配置以便恢复（可选）
     const originalConfig = { ...config };
     
     try {
-        // 合并参数配置
         if (paramConfig && paramConfig.params) {
-            console.log('应用参数配置:', paramConfig.params);
             for (const [key, value] of Object.entries(paramConfig.params)) {
                 if (key === 'consecutiveDigitsPattern' && typeof value === 'string') {
                     try {
                         config[key] = new RegExp(value);
-                        console.log(`设置正则 ${key}:`, config[key]);
                     } catch (e) {
                         console.warn(`正则表达式解析失败: ${value}`);
                     }
@@ -62,27 +57,17 @@ export function detectNoiseFragments(text, stepConfig = null, paramConfig = null
             }
         }
         
-        console.log('当前配置:', {
-            windowSize: config.windowSize,
-            step: config.step,
-            mahalPercentile: config.mahalPercentile,
-            consecutiveDigitsPattern: config.consecutiveDigitsPattern?.source
-        });
-        
         const context = {};
         
-        // 预计算全局统计
         const windows = computeWindowFeatures(text, config.windowSize, config.step);
         if (windows.length > 0) {
             context.globalStats = computeMeanStd(windows);
         }
         
-        // 确定要执行的步骤
         let steps;
         if (stepConfig && stepConfig.steps && stepConfig.steps.length > 0) {
             steps = buildSteps(stepConfig.steps);
         } else {
-            // 默认步骤顺序
             steps = [
                 { name: '1. 马氏距离滑动窗口检测', fn: stepMahalanobisWindowDetection },
                 { name: '2. 马氏距离精确定位', fn: stepMahalanobisRefine },
@@ -98,7 +83,6 @@ export function detectNoiseFragments(text, stepConfig = null, paramConfig = null
         return { fragments: finalIntervals, stepResults, usedSteps: steps };
     } catch (err) {
         console.error('检测过程出错:', err);
-        // 恢复配置
         Object.assign(config, originalConfig);
         throw err;
     }

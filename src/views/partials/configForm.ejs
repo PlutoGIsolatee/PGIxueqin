@@ -1,0 +1,76 @@
+<% const configGroups = {
+    '窗口检测': ['windowSize', 'step', 'mahalPercentile'],
+    '精确定位': ['refineWindowSize', 'refineStep', 'minSequenceLength', 'maxCV'],
+    '豁免规则': ['entropyThreshold', 'consecutiveDigitsPattern', 'extendChars', 'sigmaThreshold'],
+    '其他': ['debug']
+}; %>
+
+<% const configDescriptions = {
+    windowSize: '窗口大小 (字符)',
+    step: '滑动步长',
+    mahalPercentile: '马氏距离分位数 (0-1)',
+    refineWindowSize: '精细窗口大小',
+    refineStep: '精细步长',
+    minSequenceLength: '最小连续窗口数',
+    maxCV: '最大变异系数',
+    entropyThreshold: '低熵阈值 (0-1)',
+    consecutiveDigitsPattern: '连续数字正则',
+    extendChars: '边界扩展字符数',
+    sigmaThreshold: '3σ 阈值倍数',
+    debug: '调试模式'
+}; %>
+
+<% const configHints = {
+    windowSize: '建议 50-200',
+    step: '建议 5-20',
+    mahalPercentile: '0.9-0.99',
+    refineWindowSize: '5-20',
+    refineStep: '1-5',
+    minSequenceLength: '1-5',
+    maxCV: '0.3-0.8',
+    entropyThreshold: '0.3-0.6',
+    extendChars: '10-50',
+    sigmaThreshold: '2-4'
+}; %>
+
+<% for (const [groupName, keys] of Object.entries(configGroups)) { %>
+    <div class="config-section">
+        <h4><%= groupName %></h4>
+        <% for (const key of keys) { %>
+            <% let value = serverConfig[key];
+               let inputType = 'number';
+               let step = 'any';
+               
+               if (currentParamConfig && currentParamConfig.params && currentParamConfig.params[key] !== undefined) {
+                   value = currentParamConfig.params[key];
+               }
+               
+               if (key === 'consecutiveDigitsPattern') {
+                   inputType = 'text';
+                   if (value && typeof value === 'object' && value.source) {
+                       value = value.source;
+                   } else if (value && typeof value === 'string') {
+                       value = value;
+                   } else {
+                       value = '';
+                   }
+               } else if (key === 'debug') {
+                   inputType = 'checkbox';
+                   value = value ? 'checked' : '';
+               } else if (typeof value === 'number') {
+                   step = '0.01';
+                   value = value.toString();
+               } else {
+                   value = String(value);
+               }
+               
+               const displayValue = value === 'checked' ? '' : escapeHtml(String(value));
+            %>
+            <div class="config-field">
+                <label title="<%= configDescriptions[key] || key %>"><%= key %>:</label>
+                <input type="<%= inputType %>" data-param="<%= key %>" value="<%= displayValue %>" step="<%= step %>" <%= value === 'checked' ? 'checked' : '' %>>
+                <span class="hint"><%= configHints[key] || '' %></span>
+            </div>
+        <% } %>
+    </div>
+<% } %>
