@@ -1,0 +1,655 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for src/core/paragraph.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/core</a> paragraph.js</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">35.29% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>42/119</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">28.88% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>13/45</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">33.33% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>5/15</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">36.95% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>34/92</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+        <template id="filterTemplate">
+            <div class="quiet">
+                Filter:
+                <input type="search" id="fileSearch">
+            </div>
+        </template>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">47x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">87x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-yes">39x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { countClasses } from '../classify.js';
+import { isWindowAbnormalBy3Sigma } from './anomaly.js';
+&nbsp;
+// 缓存全局段落信息和预计算的相似段落统计
+let cachedParagraphs = null;
+let cachedParagraphFeatures = null;
+let cachedParagraphLengths = null;
+let cachedNearbyStats = null;
+let cachedEntropies = null;
+&nbsp;
+/**
+ * 获取文本中所有自然段的起止索引（基于换行符分割）
+ */
+export function getParagraphs(text) {
+    const paragraphs = [];
+    let start = 0;
+    const lineBreakRegex = /\r?\n/g;
+    let match;
+    while ((match = lineBreakRegex.exec(text)) !== null) {
+        const end = match.index;
+        if (end &gt; start) paragraphs.push({ start, end });
+        start = end + match[0].length;
+    }
+    if (start &lt; text.length) paragraphs.push({ start, end: text.length });
+    return paragraphs;
+}
+&nbsp;
+/**
+ * 计算段落的特征比例（与全局统计一致）
+ */
+export function <span class="fstat-no" title="function not covered" >getParagraphFeatures(</span>paraText) {
+    const counts = <span class="cstat-no" title="statement not covered" >countClasses(paraText);</span>
+<span class="cstat-no" title="statement not covered" >    if (counts.total === 0) <span class="cstat-no" title="statement not covered" >return null;</span></span>
+    const hanTotal = <span class="cstat-no" title="statement not covered" >counts.zhChar.reduce(<span class="fstat-no" title="function not covered" >(a</span>,b)=&gt;<span class="cstat-no" title="statement not covered" >a+b,</span>0);</span>
+    const enTotal = <span class="cstat-no" title="statement not covered" >counts.enChar.reduce(<span class="fstat-no" title="function not covered" >(a</span>,b)=&gt;<span class="cstat-no" title="statement not covered" >a+b,</span>0);</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+        han: hanTotal / counts.total,
+        zhPunc: counts.zhPunc / counts.total,
+        enChar: enTotal / counts.total,
+        enPunc: counts.enPunc / counts.total,
+        digit: counts.digit / counts.total,
+        other: counts.other / counts.total
+    };
+}
+&nbsp;
+/**
+ * 判断段落是否异常（基于全局3σ）
+ */
+export function <span class="fstat-no" title="function not covered" >isParagraphAbnormal(</span>paraText, globalStats, sigma = <span class="branch-0 cbranch-no" title="branch not covered" >3)</span> {
+    const features = <span class="cstat-no" title="statement not covered" >getParagraphFeatures(paraText);</span>
+<span class="cstat-no" title="statement not covered" >    if (!features) <span class="cstat-no" title="statement not covered" >return false;</span></span>
+<span class="cstat-no" title="statement not covered" >    return isWindowAbnormalBy3Sigma(features, globalStats.means, globalStats.stds, sigma);</span>
+}
+&nbsp;
+/**
+ * 预计算所有段落的特征、长度和排列熵，并计算相近段落统计
+ */
+export function <span class="fstat-no" title="function not covered" >precomputeParagraphStats(</span>text, lenRatio = <span class="branch-0 cbranch-no" title="branch not covered" >0.2,</span> minSimilar = <span class="branch-0 cbranch-no" title="branch not covered" >2)</span> {
+<span class="cstat-no" title="statement not covered" >    if (cachedParagraphs !== null) <span class="cstat-no" title="statement not covered" >return; </span></span>// 已缓存
+    
+<span class="cstat-no" title="statement not covered" >    cachedParagraphs = getParagraphs(text);</span>
+<span class="cstat-no" title="statement not covered" >    if (cachedParagraphs.length === 0) <span class="cstat-no" title="statement not covered" >return;</span></span>
+    
+    const n = <span class="cstat-no" title="statement not covered" >cachedParagraphs.length;</span>
+<span class="cstat-no" title="statement not covered" >    cachedParagraphFeatures = new Array(n);</span>
+<span class="cstat-no" title="statement not covered" >    cachedParagraphLengths = new Array(n);</span>
+<span class="cstat-no" title="statement not covered" >    cachedEntropies = new Array(n);</span>
+    
+    // 1. 计算每个段落的特征、长度和排列熵（先 trim 去除首尾空白）
+<span class="cstat-no" title="statement not covered" >    for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; n; i++) {</span>
+        const para = <span class="cstat-no" title="statement not covered" >cachedParagraphs[i];</span>
+        const paraText = <span class="cstat-no" title="statement not covered" >text.slice(para.start, para.end);</span>
+        const trimmedText = <span class="cstat-no" title="statement not covered" >paraText.trim();</span> // 关键修改：去除首尾空白
+<span class="cstat-no" title="statement not covered" >        cachedParagraphFeatures[i] = getParagraphFeatures(paraText);</span>
+<span class="cstat-no" title="statement not covered" >        cachedParagraphLengths[i] = para.end - para.start;</span>
+<span class="cstat-no" title="statement not covered" >        cachedEntropies[i] = computePermutationEntropy(trimmedText);</span>
+    }
+    
+    // 2. 预计算每个段落的相近段落统计
+<span class="cstat-no" title="statement not covered" >    cachedNearbyStats = new Array(n);</span>
+    
+<span class="cstat-no" title="statement not covered" >    for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; n; i++) {</span>
+        const targetLen = <span class="cstat-no" title="statement not covered" >cachedParagraphLengths[i];</span>
+        const lowerBound = <span class="cstat-no" title="statement not covered" >targetLen * (1 - lenRatio);</span>
+        const upperBound = <span class="cstat-no" title="statement not covered" >targetLen * (1 + lenRatio);</span>
+        const similarFeatures = <span class="cstat-no" title="statement not covered" >[];</span>
+        
+<span class="cstat-no" title="statement not covered" >        for (let j = <span class="cstat-no" title="statement not covered" >0;</span> j &lt; n; j++) {</span>
+<span class="cstat-no" title="statement not covered" >            if (i === j) <span class="cstat-no" title="statement not covered" >continue;</span></span>
+            const len = <span class="cstat-no" title="statement not covered" >cachedParagraphLengths[j];</span>
+<span class="cstat-no" title="statement not covered" >            if (len &gt;= lowerBound &amp;&amp; len &lt;= upperBound) {</span>
+<span class="cstat-no" title="statement not covered" >                if (cachedParagraphFeatures[j]) <span class="cstat-no" title="statement not covered" >similarFeatures.push(cachedParagraphFeatures[j]);</span></span>
+            }
+        }
+        
+<span class="cstat-no" title="statement not covered" >        if (similarFeatures.length &lt; minSimilar) {</span>
+<span class="cstat-no" title="statement not covered" >            cachedNearbyStats[i] = null; </span>// 回退到全局统计
+<span class="cstat-no" title="statement not covered" >            continue;</span>
+        }
+        
+        // 计算均值和标准差
+        const means = <span class="cstat-no" title="statement not covered" >{ han:0, zhPunc:0, enChar:0, enPunc:0, digit:0, other:0 };</span>
+<span class="cstat-no" title="statement not covered" >        for (const f of similarFeatures) {</span>
+<span class="cstat-no" title="statement not covered" >            for (const key in means) <span class="cstat-no" title="statement not covered" >means[key] += f[key];</span></span>
+        }
+<span class="cstat-no" title="statement not covered" >        for (const key in means) <span class="cstat-no" title="statement not covered" >means[key] /= similarFeatures.length;</span></span>
+        
+        const stds = <span class="cstat-no" title="statement not covered" >{ han:0, zhPunc:0, enChar:0, enPunc:0, digit:0, other:0 };</span>
+<span class="cstat-no" title="statement not covered" >        for (const f of similarFeatures) {</span>
+<span class="cstat-no" title="statement not covered" >            for (const key in stds) <span class="cstat-no" title="statement not covered" >stds[key] += (f[key] - means[key]) ** 2;</span></span>
+        }
+<span class="cstat-no" title="statement not covered" >        for (const key in stds) <span class="cstat-no" title="statement not covered" >stds[key] = Math.sqrt(stds[key] / similarFeatures.length);</span></span>
+        
+<span class="cstat-no" title="statement not covered" >        cachedNearbyStats[i] = { means, stds };</span>
+    }
+}
+&nbsp;
+/**
+ * 获取缓存的段落信息
+ */
+export function <span class="fstat-no" title="function not covered" >getCachedParagraphs(</span>) {
+<span class="cstat-no" title="statement not covered" >    return cachedParagraphs;</span>
+}
+&nbsp;
+/**
+ * 获取缓存的段落特征
+ */
+export function <span class="fstat-no" title="function not covered" >getCachedParagraphFeatures(</span>index) {
+<span class="cstat-no" title="statement not covered" >    if (!cachedParagraphFeatures) <span class="cstat-no" title="statement not covered" >return null;</span></span>
+<span class="cstat-no" title="statement not covered" >    return cachedParagraphFeatures[index];</span>
+}
+&nbsp;
+/**
+ * 获取缓存的段落排列熵
+ */
+export function <span class="fstat-no" title="function not covered" >getCachedParagraphEntropy(</span>index) {
+<span class="cstat-no" title="statement not covered" >    if (!cachedEntropies) <span class="cstat-no" title="statement not covered" >return null;</span></span>
+<span class="cstat-no" title="statement not covered" >    return cachedEntropies[index];</span>
+}
+&nbsp;
+/**
+ * 获取与目标段落长度相近的段落的特征统计（使用预计算缓存）
+ */
+export function <span class="fstat-no" title="function not covered" >getNearbyParagraphStatsCached(</span>paragraphIndex) {
+<span class="cstat-no" title="statement not covered" >    if (!cachedNearbyStats) <span class="cstat-no" title="statement not covered" >return null;</span></span>
+<span class="cstat-no" title="statement not covered" >    if (paragraphIndex &lt; 0 || paragraphIndex &gt;= cachedNearbyStats.length) <span class="cstat-no" title="statement not covered" >return null;</span></span>
+<span class="cstat-no" title="statement not covered" >    return cachedNearbyStats[paragraphIndex];</span>
+}
+&nbsp;
+/**
+ * 清除缓存（用于重新加载文本时）
+ */
+export function <span class="fstat-no" title="function not covered" >clearParagraphCache(</span>) {
+<span class="cstat-no" title="statement not covered" >    cachedParagraphs = null;</span>
+<span class="cstat-no" title="statement not covered" >    cachedParagraphFeatures = null;</span>
+<span class="cstat-no" title="statement not covered" >    cachedParagraphLengths = null;</span>
+<span class="cstat-no" title="statement not covered" >    cachedNearbyStats = null;</span>
+<span class="cstat-no" title="statement not covered" >    cachedEntropies = null;</span>
+}
+&nbsp;
+/**
+ * 计算排列熵（Permutation Entropy），直接基于字符的Unicode码点
+ */
+export function computePermutationEntropy(text, m = 3, tau = 1) {
+    if (text.length &lt; m) return 0;
+    const seq = [];
+    for (let i = 0; i &lt; text.length; i++) {
+        seq.push(text.charCodeAt(i));
+    }
+    const n = seq.length;
+    const patterns = new Map();
+    for (let i = 0; i &lt;= n - m; i += tau) {
+        const window = seq.slice(i, i + m);
+        const sortedIndices = [...window.keys()].sort((a, b) =&gt; window[a] - window[b]);
+        const pattern = sortedIndices.join(',');
+        patterns.set(pattern, (patterns.get(pattern) || 0) + 1);
+    }
+    const total = Array.from(patterns.values()).reduce((a,b)=&gt;a+b,0);
+    let entropy = 0;
+    for (const count of patterns.values()) {
+        const p = count / total;
+        entropy -= p * Math.log(p);
+    }
+    const maxEntropy = Math.log(factorial(m));
+    return maxEntropy === 0 ? <span class="branch-0 cbranch-no" title="branch not covered" >0 </span>: entropy / maxEntropy;
+}
+&nbsp;
+function factorial(n) {
+    if (n &lt;= 1) return 1;
+    return n * factorial(n - 1);
+}</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
+                at 2026-03-24T02:45:35.470Z
+            </div>
+        <script src="../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../sorter.js"></script>
+        <script src="../../block-navigation.js"></script>
+    </body>
+</html>
+    
