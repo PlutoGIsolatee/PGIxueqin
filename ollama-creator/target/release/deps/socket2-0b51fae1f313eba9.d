@@ -1,0 +1,11 @@
+/home/pluto/xueqin/ollama-creator/target/release/deps/socket2-0b51fae1f313eba9.d: /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/lib.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sockaddr.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/socket.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sockref.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sys/unix.rs
+
+/home/pluto/xueqin/ollama-creator/target/release/deps/libsocket2-0b51fae1f313eba9.rlib: /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/lib.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sockaddr.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/socket.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sockref.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sys/unix.rs
+
+/home/pluto/xueqin/ollama-creator/target/release/deps/libsocket2-0b51fae1f313eba9.rmeta: /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/lib.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sockaddr.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/socket.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sockref.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sys/unix.rs
+
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/lib.rs:
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sockaddr.rs:
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/socket.rs:
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sockref.rs:
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/socket2-0.6.5/src/sys/unix.rs:
