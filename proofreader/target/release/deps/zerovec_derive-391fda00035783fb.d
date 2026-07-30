@@ -1,0 +1,10 @@
+/home/pluto/xueqin/proofreader/target/release/deps/zerovec_derive-391fda00035783fb.d: /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/lib.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/make_ule.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/make_varule.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/ule.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/utils.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/varule.rs
+
+/home/pluto/xueqin/proofreader/target/release/deps/libzerovec_derive-391fda00035783fb.so: /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/lib.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/make_ule.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/make_varule.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/ule.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/utils.rs /home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/varule.rs
+
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/lib.rs:
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/make_ule.rs:
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/make_varule.rs:
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/ule.rs:
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/utils.rs:
+/home/pluto/.cargo/registry/src/mirrors.ustc.edu.cn-38d0e5eb5da2abae/zerovec-derive-0.11.3/src/varule.rs:
